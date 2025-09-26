@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queen Rhania | Brand Identity Designer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'midnight': '#0A1A2F',
+                        'cream': '#F8F4E9',
+                        'terracotta': '#E07A5F',
+                        'sage': '#8A9B6E',
+                    },
+                    fontFamily: {
+                        'serif': ['Playfair Display', 'serif'],
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+     
+    <style>
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .portfolio-carousel {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .carousel-item {
+            flex: 0 0 100%;
+            padding: 0 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-item {
+                flex: 0 0 50%;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-item {
+                flex: 0 0 33.333%;
+            }
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .carousel-nav {
+            background-color: rgba(10, 26, 47, 0.8);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .carousel-nav:hover {
+            background-color: #0A1A2F;
+            transform: scale(1.1);
+        }
+        
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #CBD5E0;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: #E07A5F;
+            transform: scale(1.2);
+        }
+        
+        .filter-active {
+            background-color: #E07A5F;
+            color: white;
+            border-color: #E07A5F;
+        }
+        
+        .project-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 26, 47, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(10, 26, 47, 0.7), rgba(10, 26, 47, 0.7)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230A1A2F"/><path d="M0 0L100 100M100 0L0 100" stroke="%23E07A5F" stroke-width="0.5"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .project-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .project-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .nav-scroll {
+            background-color: rgba(248, 244, 233, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-active {
+            background-color: #E07A5F;
+            color: white;
+        }
+
+        /* Styles spécifiques pour le bouton de soumission */
+        .btn-terracotta {
+            background-color: #E07A5F;
+        }
+        
+        .btn-terracotta:hover {
+            background-color: #d16749;
+        }
+        
+        .btn-terracotta:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-cream font-sans text-midnight">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#" class="text-2xl font-serif font-bold text-midnight">Queen Rhania</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#portfolio" class="hover:text-terracotta transition-colors">Portfolio</a>
+                <a href="#services" class="hover:text-terracotta transition-colors">Services</a>
+                <a href="#about" class="hover:text-terracotta transition-colors">About</a>
+                <a href="#achievements" class="hover:text-terracotta transition-colors">Achievements</a>
+                <a href="#contact" class="hover:text-terracotta transition-colors">Contact</a>
+            </div>
+            <a href="#contact" class="bg-terracotta text-white px-4 py-2 rounded-md hover:bg-opacity-90 transition-colors">
+                Start a Project
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center pt-16">
+        <div class="container mx-auto px-6 py-20 text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6">Crafting Iconic Brand Identities for Visionary Leaders</h1>
+            <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">I am Queen Rhania, a brand identity designer dedicated to transforming your vision into a timeless visual narrative.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#portfolio" class="bg-terracotta text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-opacity-90 transition-colors">View My Portfolio</a>
+                <a href="#services" class="border-2 border-white text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-white hover:bg-opacity-10 transition-colors">See Services & Book</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-center mb-4">Featured Projects</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">A selection of brand identity projects that showcase my approach to creating meaningful and impactful designs.</p>
+            
+            <!-- Portfolio Filters -->
+            <div class="flex flex-wrap justify-center gap-2 mb-12">
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors filter-active" data-filter="all">All</button>
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors" data-filter="branding">Brand Identity</button>
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors" data-filter="packaging">Packaging</button>
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors" data-filter="makeup">T-Shirt Makeup</button>
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors" data-filter="print">Print Design</button>
+                <button class="filter-btn px-4 py-2 rounded-full border border-midnight hover:bg-midnight hover:text-white transition-colors" data-filter="social">Social Media</button>
+            </div>
+            
+            <!-- Carousel Container -->
+            <div class="portfolio-carousel relative">
+                <!-- Navigation Arrows -->
+                <button class="carousel-nav absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 hidden md:flex" id="carousel-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-nav absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 hidden md:flex" id="carousel-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Carousel Track -->
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Project 1 branding-->
+                    <div class="carousel-item" data-category="branding">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/travel2.jpg" alt="Lumina Cosmetics Brand Identity" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/travel2.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Travel Agency</h3>
+                                <p class="text-gray-600 mb-4">Complete brand identity for a vegan skincare line emphasizing purity and luxury.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Brand Identity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-item" data-category="branding">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/brand1.jpg" alt="Lumina Cosmetics Brand Identity" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/brand1.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">General plumbing</h3>
+                                <p class="text-gray-600 mb-4">Complete brand identity for a vegan skincare line emphasizing purity and luxury.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Brand Identity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" data-category="branding">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/brand2.png" alt="Lumina Cosmetics Brand Identity" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/brand2.png" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">SOCIETE RONKA NAWE</h3>
+                                <p class="text-gray-600 mb-4">From the logo to the full visual identity system, this design was guided by clarity, purpose, and cohesion.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Brand Identity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" data-category="branding">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/brand4.jpg" alt="Lumina Cosmetics Brand Identity" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/travel2.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Travel Agency</h3>
+                                <p class="text-gray-600 mb-4">Complete brand identity for a vegan skincare line emphasizing purity and luxury.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Brand Identity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="carousel-item" data-category="packaging">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/brand6.jpg" alt="Artisan Foods Packaging" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/brand6.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Luxury restaurant</h3>
+                                <p class="text-gray-600 mb-4">When designing for a luxury restaurant, the creative approach is completely different from designing for a fast-food brand. Fast food often relies on bold, busy layouts, flashy colors, and multiple elements to create quick excitement and appeal to instant cravings. .</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Packaging</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <!-- Project 4 -->
+                    <div class="carousel-item" data-category="branding">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/queen2.jpg" alt="Nova Cosmetics Brand Identity" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/queen2.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Nova Cosmetics</h3>
+                                <p class="text-gray-600 mb-4">Modern brand identity for a science-backed skincare company targeting millennials.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Brand Identity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  
+                    <!-- Project 6 -->
+                    <div class="carousel-item" data-category="web">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/projects/style-collective.jpg" alt="Style Collective Website" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/projects/style-collective-case-study.html" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Style Collective</h3>
+                                <p class="text-gray-600 mb-4">E-commerce website design for a fashion retailer focusing on sustainable brands.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-terracotta bg-opacity-20 text-terracotta px-3 py-1 rounded-full text-sm">Web Design</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 7 -->
+                    <div class="carousel-item" data-category="print">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/projects/print-design-1.jpg" alt="Print Design Project" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/projects/print-design-case-study.html" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Corporate Stationery Suite</h3>
+                                <p class="text-gray-600 mb-4">Complete print design package including business cards, letterheads, and envelopes.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-sage bg-opacity-20 text-sage px-3 py-1 rounded-full text-sm">Print Design</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 8 -->
+                    <div class="carousel-item" data-category="social">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/social1.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/social1.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Social Media Campaign</h3>
+                                <p class="text-gray-600 mb-4">Complete social media graphics and templates for a 3-month marketing campaign.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project 8 -->
+                    <div class="carousel-item" data-category="social">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/social5.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/social5.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Social Media promotions</h3>
+                                <p class="text-gray-600 mb-4">Complete social media graphics and templates for a 3-month marketing campaign.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project 8 -->
+                    <div class="carousel-item" data-category="social">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/social6.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/social6.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">Social Media Campaign</h3>
+                                <p class="text-gray-600 mb-4">Complete social media graphics and templates for a 3-month marketing campaign.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 <!-- Project makeup t-shirt -->
+                  <div class="carousel-item" data-category="makeup">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/tshirt3.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/tshirt3.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">T-shirt Makeup</h3>
+                                <p class="text-gray-600 mb-4">Our T-shirt Makeup service combines the art of design with the versatility of fashion. We create unique, eye-catching graphics that elevate your t-shirt from basic to stunning. Perfect for events, promotions, or personal expression, our designs will make your apparel a standout piece in any wardrobe.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item" data-category="makeup">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/tshirt.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/tshirt.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">T-shirt Makeup</h3>
+                                <p class="text-gray-600 mb-4">Our T-shirt Makeup service combines the art of design with the versatility of fashion. We create unique, eye-catching graphics that elevate your t-shirt from basic to stunning. Perfect for events, promotions, or personal expression, our designs will make your apparel a standout piece in any wardrobe.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item" data-category="makeup">
+                        <div class="project-card bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
+                            <div class="project-image">
+                                <img src="queen/tshirt2.jpg" alt="Social Media Campaign" class="w-full h-full object-cover">
+                                <div class="project-overlay">
+                                    <a href="queen/tshirt2.jpg" class="bg-terracotta text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition-colors">View Case Study</a>
+                                </div>
+                            </div>
+                            <div class="p-6 flex-grow">
+                                <h3 class="text-xl font-serif font-bold mb-2">T-shirt Makeup</h3>
+                                <p class="text-gray-600 mb-4">Our T-shirt Makeup service combines the art of design with the versatility of fashion. We create unique, eye-catching graphics that elevate your t-shirt from basic to stunning. Perfect for events, promotions, or personal expression, our designs will make your apparel a standout piece in any wardrobe.</p>
+                                <div class="mt-auto">
+                                    <span class="inline-block bg-midnight bg-opacity-20 text-midnight px-3 py-1 rounded-full text-sm">Social Media</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+                
+                <!-- Carousel Dots -->
+                <div class="carousel-dots" id="carousel-dots">
+                    <!-- Dots will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border-2 border-midnight text-midnight px-6 py-3 rounded-md font-medium hover:bg-midnight hover:text-white transition-colors">View Full Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <!-- Services Section -->
+     <section id="services" class="py-20 bg-midnight text-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-center mb-4">Services & Booking</h2>
+            <p class="text-lg text-center text-gray-300 mb-12 max-w-2xl mx-auto">Let's collaborate to build your legacy brand. Select your service to start a conversation on WhatsApp.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1: Comprehensive Brand Identity -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-terracotta rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-gem text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">Comprehensive Brand Identity</h3>
+                    <p class="text-gray-300 mb-6">Logo, color palette, typography, brand guidelines, and stationery suite for a complete brand transformation.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20Comprehensive%20Brand%20Identity%20package.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+                
+                <!-- Service 2: Logo & Visual Identity -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-sage rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-drafting-compass text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">Logo & Visual Identity</h3>
+                    <p class="text-gray-300 mb-6">Primary & secondary logo design with complementary color palette and typography system.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20Logo%20%26%20Visual%20Identity%20service.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+                
+                <!-- Service 3: Brand Collateral & Packaging -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-terracotta rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-cube text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">Brand Collateral & Packaging</h3>
+                    <p class="text-gray-300 mb-6">Social media kits, packaging design, and marketing materials that bring your brand to life.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20Brand%20Collateral%20%26%20Packaging%20services.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+
+                <!-- Service 4: T-shirt Makeup -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-sage rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-tshirt text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">T-shirt Makeup</h3>
+                    <p class="text-gray-300 mb-6">Our T-shirt Makeup service combines the art of design with the versatility of fashion. We create unique, eye-catching graphics that elevate your t-shirt from basic to stunning.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20T-shirt%20makeup%20services.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+
+                <!-- Service 5: Print Design -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-terracotta rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fas fa-print text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">Print Design</h3>
+                    <p class="text-gray-300 mb-6">Business cards, brochures, flyers, and all print materials designed with attention to detail and brand consistency.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20print%20design%20services.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+
+                <!-- Service 6: Social Media Design -->
+                <div class="service-card bg-white bg-opacity-10 rounded-lg p-8 backdrop-blur-sm hover:bg-opacity-15 transition-all duration-300">
+                    <div class="w-16 h-16 bg-sage rounded-full flex items-center justify-center mb-6 shadow-lg">
+                        <i class="fab fa-instagram text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-serif font-bold mb-4">Social Media Design</h3>
+                    <p class="text-gray-300 mb-6">Eye-catching social media graphics, templates, and content that increases engagement and brand awareness.</p>
+                    <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'm%20interested%20in%20your%20Social%20Media%20Design%20services.%20Please%20send%20me%20more%20information." 
+                       target="_blank" 
+                       class="block w-full bg-terracotta text-white text-center py-3 rounded-md hover:bg-opacity-90 transition-colors font-medium">
+                        Book on WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- About Section -->
+    <section id="about" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="relative">
+                        <div class="absolute -inset-4 bg-gradient-to-br from-terracotta/20 to-sage/20 rounded-2xl transform rotate-3"></div>
+                        <div class="relative bg-white rounded-lg shadow-xl overflow-hidden border-8 border-white max-w-md mx-auto">
+                            <img src="queen/queen2.jpg" alt="Queen Rhania - Brand Identity Designer" 
+                                 class="w-full h-auto object-cover">
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-terracotta rounded-full opacity-20"></div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">About Queen Rhania</h2>
+                    <p class="text-lg mb-6">For me, design is not merely about aesthetics; it's about strategy and soul. I believe a powerful brand identity is the silent ambassador of your business, communicating your values and captivating your audience before a single word is spoken.</p>
+                    <p class="text-lg mb-8">My process is a collaborative journey, where we distill the essence of your vision into a precise and elegant visual language. When I'm not designing, I'm exploring art galleries or enjoying a perfect cup of coffee.</p>
+                    <a href="#contact" class="bg-terracotta text-white px-6 py-3 rounded-md font-medium hover:bg-opacity-90 transition-colors">Let's Create Something Beautiful</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-center mb-4">Professional Achievements</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">My commitment to excellence in design is backed by professional certifications and continuous learning in the field of brand identity design.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Certificate 1: Lagos Creative Hangout 2.0 -->
+                <div class="achievement-card bg-gradient-to-br from-terracotta/5 to-sage/5 rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <!-- Certificate Image -->
+                    <div class="mb-6 relative group cursor-pointer">
+                        <div class="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-terracotta transition-colors">
+                            <img src="queen/certificate.jpg" 
+                                 alt="Lagos Creative Hangout 2.0 Volunteer Appreciation Certificate" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                 onclick="openCertificateModal(this.src, 'Lagos Creative Hangout 2.0 - Volunteer Appreciation')">
+                        </div>
+                        <!-- View larger overlay -->
+                        <div class="absolute inset-0 bg-midnight bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <span class="bg-white text-midnight px-4 py-2 rounded-md text-sm font-medium">Click to view larger</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-terracotta bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-hands-helping text-lg text-terracotta"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-serif font-bold mb-2 text-midnight">Volunteer Appreciation Certificate</h3>
+                            <p class="text-gray-600 mb-2 font-medium">Lagos Creative Hangout 2.0</p>
+                            <p class="text-gray-600 mb-3 text-sm">Recognition for outstanding volunteer contribution to the creative community development and design workshops.</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                <span>Lagos, Nigeria</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Certificate 2: Award of Excellence -->
+                <div class="achievement-card bg-gradient-to-br from-sage/5 to-terracotta/5 rounded-xl p-6 border border-gray-100 hover:shadow-lg transition-all duration-300">
+                    <!-- Certificate Image -->
+                    <div class="mb-6 relative group cursor-pointer">
+                        <div class="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 hover:border-sage transition-colors">
+                            <img src="queen/award.jpg" 
+                                 alt="Award of Excellence Certificate" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                 onclick="openCertificateModal(this.src, 'Award of Excellence')">
+                        </div>
+                        <!-- View larger overlay -->
+                        <div class="absolute inset-0 bg-midnight bg-opacity-0 group-hover:bg-opacity-20 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <span class="bg-white text-midnight px-4 py-2 rounded-md text-sm font-medium">Click to view larger</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-sage bg-opacity-20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-award text-lg text-sage"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-serif font-bold mb-2 text-midnight">Award of Excellence</h3>
+                            <p class="text-gray-600 mb-3 text-sm">Recognition for exceptional performance and outstanding contributions to brand identity design and creative excellence.</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-star mr-2"></i>
+                                <span>Excellence in Design</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Certificate Modal -->
+            <div id="certificateModal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+                <div class="relative max-w-4xl max-h-full">
+                    <button onclick="closeCertificateModal()" class="absolute top-4 right-4 text-white bg-midnight bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition-colors z-10">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
+                    <div class="absolute bottom-4 left-4 bg-midnight bg-opacity-75 text-white px-4 py-2 rounded-md">
+                        <h4 id="modalTitle" class="font-semibold"></h4>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Achievement Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-3xl mx-auto">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-terracotta mb-2">50+</div>
+                    <div class="text-sm text-gray-600">Projects Completed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-sage mb-2">2</div>
+                    <div class="text-sm text-gray-600">Certifications</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-terracotta mb-2">100%</div>
+                    <div class="text-sm text-gray-600">Client Satisfaction</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-sage mb-2">3+</div>
+                    <div class="text-sm text-gray-600">Years Experience</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-sage bg-opacity-10">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-center mb-4">Get In Touch</h2>
+            <p class="text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto">Ready to begin your brand transformation? Reach out through the form below or contact me directly.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <!-- Container pour les messages -->
+                    <div id="messageContainer" class="mb-4"></div>
+                    
+                    <form id="contactForm" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="name" name="from_name" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="email" name="from_email" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <input type="text" id="subject" name="subject" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
+                            <textarea id="message" name="message" rows="5" required 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta"></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn" 
+                                class="w-full btn-terracotta text-white py-3 rounded-md font-medium hover:bg-opacity-90 transition-colors">
+                            <span id="btnText">Send Message</span>
+                            <span id="btnLoader" class="hidden">
+                                <i class="fas fa-spinner fa-spin mr-2"></i>Sending...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="flex flex-col justify-center">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="text-xl font-serif font-bold mb-6">Direct Contact</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-terracotta bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-envelope text-terracotta"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">Email</p>
+                                    <p class="font-medium">hello@queenrhania.design</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-terracotta bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fab fa-whatsapp text-terracotta"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">WhatsApp</p>
+                                    <p class="font-medium">+25768505909</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="https://wa.me/+25768505909?text=Hello%20Queen%20Rhania!%20I'd%20like%20to%20discuss%20a%20project%20with%20you." 
+                           target="_blank" 
+                           class="block w-full bg-green-600 text-white text-center py-3 rounded-md mt-6 hover:bg-green-700 transition-colors">
+                            <i class="fab fa-whatsapp mr-2"></i> Message Me on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-midnight text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-serif font-bold">Queen Rhania</h3>
+                    <p class="text-gray-400 mt-2">Brand Identity Designer</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.behance.net/queenrhania" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-behance text-xl"></i>
+                    </a>
+                    <a href="https://www.pinterest.com/queenrhania" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-pinterest text-xl"></i>
+                    </a>
+                    <a href="https://www.instagram.com/queenrhaniagraphix" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="https://www.facebook.com/queenrhaniagraphix" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Queen Rhania. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+         // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scroll');
+            } else {
+                navbar.classList.remove('nav-scroll');
+            }
+        });
+
+        // Portfolio filtering
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projectItems = document.querySelectorAll('.project-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('filter-active'));
+                    // Add active class to clicked button
+                    this.classList.add('filter-active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    projectItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+
+// Carousel functionality
+            
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carousel functionality
+            const track = document.getElementById('carousel-track');
+            const items = document.querySelectorAll('.carousel-item');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            const dotsContainer = document.getElementById('carousel-dots');
+            
+            let currentIndex = 0;
+            let itemsPerView = getItemsPerView();
+            
+            // Create dots based on number of items
+            function createDots() {
+                dotsContainer.innerHTML = '';
+                const dotCount = Math.ceil(items.length / itemsPerView);
+                
+                for (let i = 0; i < dotCount; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('carousel-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
+                    dotsContainer.appendChild(dot);
+                }
+            }
+            
+            // Determine how many items to show based on screen size
+            function getItemsPerView() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+            
+            // Update carousel position
+            function updateCarousel() {
+                const itemWidth = 100 / itemsPerView;
+                track.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
+                
+                // Update active dot
+                document.querySelectorAll('.carousel-dot').forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+            
+            // Navigate to specific slide
+            function goToSlide(index) {
+                const maxIndex = Math.ceil(items.length / itemsPerView) - 1;
+                currentIndex = Math.max(0, Math.min(index, maxIndex));
+                updateCarousel();
+            }
+            
+            // Next slide
+            function nextSlide() {
+                const maxIndex = Math.ceil(items.length / itemsPerView) - 1;
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                } else {
+                    currentIndex = 0;
+                }
+                updateCarousel();
+            }
+            
+            // Previous slide
+            function prevSlide() {
+                const maxIndex = Math.ceil(items.length / itemsPerView) - 1;
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    currentIndex = maxIndex;
+                }
+                updateCarousel();
+            }
+            
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const carouselItems = document.querySelectorAll('.carousel-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('filter-active'));
+                    // Add active class to clicked button
+                    this.classList.add('filter-active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Show/hide items based on filter
+                    carouselItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Reset carousel to first slide after filtering
+                    currentIndex = 0;
+                    updateCarousel();
+                    createDots(); // Recreate dots based on visible items
+                });
+            });
+            
+            // Event listeners
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                itemsPerView = getItemsPerView();
+                currentIndex = 0;
+                updateCarousel();
+                createDots();
+            });
+            
+            // Initialize carousel
+            updateCarousel();
+            createDots();
+            
+            // Auto-advance carousel (optional)
+            // setInterval(nextSlide, 5000);
+        });
+    
+
+
+        
+
+        // Certificate Modal Functions
+        function openCertificateModal(imageSrc, title) {
+            const modal = document.getElementById('certificateModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalImage.src = imageSrc;
+            modalImage.alt = title;
+            modalTitle.textContent = title;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeCertificateModal() {
+            const modal = document.getElementById('certificateModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Initialize modal event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close modal when clicking outside the image
+            document.getElementById('certificateModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeCertificateModal();
+                }
+            });
+
+            // Close modal with ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeCertificateModal();
+                }
+            });
+        });
+
+
+
+// email template js
+        // Initialize EmailJS (remplacez par votre vraie clé publique)
+        (function() {
+            emailjs.init("tdvO4GPNdvoi1znqG"); // Remplacez par votre clé publique EmailJS
+        })();
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scroll');
+            } else {
+                navbar.classList.remove('nav-scroll');
+            }
+        });
+
+        // Portfolio filtering and carousel functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const track = document.getElementById('carousel-track');
+            const items = document.querySelectorAll('.carousel-item');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            const dotsContainer = document.getElementById('carousel-dots');
+            
+            let currentIndex = 0;
+            let itemsPerView = getItemsPerView();
+            
+            function getItemsPerView() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+            
+            function updateCarousel() {
+                const itemWidth = 100 / itemsPerView;
+                track.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
+            }
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('filter-active'));
+                    this.classList.add('filter-active');
+                    currentIndex = 0;
+                    updateCarousel();
+                });
+            });
+            
+            if (prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (currentIndex > 0) currentIndex--;
+                    updateCarousel();
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    const maxIndex = Math.ceil(items.length / itemsPerView) - 1;
+                    if (currentIndex < maxIndex) currentIndex++;
+                    updateCarousel();
+                });
+            }
+            
+            updateCarousel();
+        });
+
+        // Form submission handler
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form elements
+            const form = event.target;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const messageContainer = document.getElementById('messageContainer');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            
+            // Clear previous messages
+            messageContainer.innerHTML = '';
+            
+            // Prepare template parameters
+            const templateParams = {
+                from_name: document.getElementById('name').value,
+                from_email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                to_name: 'Queen Rhania' // Nom du destinataire
+            };
+            
+            // Send email using EmailJS (remplacez service_e57k9mn et template_glcaakh par vos vrais IDs)
+            emailjs.send('service_e57k9mn', 'template_glcaakh', templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    showMessage('Message sent successfully! We\'ll get back to you soon.', 'success');
+                    form.reset(); // Clear the form
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    showMessage('Failed to send message. Please try again or contact us directly on WhatsApp.', 'error');
+                })
+                .finally(function() {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    btnLoader.classList.add('hidden');
+                });
+        });
+        
+        // Function to show success/error messages
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = `<div class="message ${type}">${message}</div>`;
+            
+            // Auto-hide message after 5 seconds
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
